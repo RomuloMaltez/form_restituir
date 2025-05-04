@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Formulário de Restituição - Prefeitura de Porto Velho</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            font-size: 10px;
+            line-height: 1.2;
+        }
+        .container {
+            max-width: 720px; /* Largura máxima do conteúdo */
+            margin: 0 auto;
+            padding: 5px;
+            box-sizing: border-box;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 5px;
+        }
+        .header img {
+            width: 40px;
+            height: auto;
+            margin: 0 auto;
+            display: block;
+        }
+        .header h1, .header h2, .header h3 {
+            margin: 2px 0;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+        .header h1 {
+            font-size: 12px;
+        }
+        .header h2, .header h3 {
+            font-size: 10px;
+        }
+        .form-title {
+            text-align: center;
+            border: 1px solid #000;
+            padding: 3px;
+            margin: 5px 0;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 10px;
+        }
+        .form-address {
+            margin-bottom: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 5px;
+        }
+        table, th, td {
+            border: 1px solid #000;
+        }
+        th, td {
+            padding: 2px;
+        }
+        input, select {
+            width: 100%;
+            padding: 2px;
+            box-sizing: border-box;
+            border: none; /* Removido para evitar problemas no PDF */
+            outline: none;
+            font-size: 10px;
+            background-color: transparent; /* Garante fundo transparente */
+        }
+        .request-text {
+            margin-bottom: 5px;
+            text-align: justify;
+            font-size: 10px;
+        }
+        .section-title {
+            background-color: #f2f2f2;
+            padding: 2px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 3px;
+            font-size: 10px;
+        }
+        .docs-section {
+            margin-bottom: 5px;
+            font-size: 10px;
+        }
+        .docs-list {
+            padding-left: 15px;
+            margin: 3px 0;
+        }
+        .notice-section {
+            margin-bottom: 5px;
+            text-align: justify;
+            font-size: 10px;
+        }
+        .date-signature {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 60px; /* Mantido o espaçamento aumentado */
+        }
+        .date {
+            width: 100%;
+            font-size: 10px;
+            margin-bottom: 10px;
+        }
+        .signature {
+            width: 60%;
+            text-align: center;
+            border-top: 1px solid #000;
+            padding-top: 2px;
+            font-size: 10px;
+        }
+        .button-container {
+            margin-top: 30px;
+            text-align: center;
+        }
+        .pdf-button {
+            background-color: #0066cc;
+            color: white;
+            padding: 8px 20px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .pdf-button:hover {
+            background-color: #0052a3;
+        }
+        @page {
+            size: A4;
+            margin: 0; /* Margens controladas pelo jsPDF */
+        }
+        @media print {
+            html, body {
+                width: 210mm;
+                height: 297mm;
+                margin: 0;
+                padding: 0;
+            }
+            .container {
+                width: 100%;
+                max-width: none;
+                margin: 0;
+                padding: 5mm; /* Espaçamento interno no modo de impressão */
+                box-sizing: border-box;
+            }
+            .button-container {
+                display: none; /* Botão oculto no PDF */
+            }
+            input {
+                border: none !important; /* Garante sem borda na impressão */
+                 background-color: transparent !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+             <img alt="Brasão de Porto Velho" src="/api/placeholder/100/100"/>
+            <h1>Prefeitura do Município de Porto Velho</h1>
+            <h2>Secretaria Municipal de Fazenda</h2>
+            <h3>Subsecretaria da Receita Municipal</h3>
+        </div>
+        <div>ANEXO II</div>
+        <div class="form-title">
+            Requerimento Padronizado<br/>
+            (Restituição de Tarifa de Expediente Indevida Res. Nº. 001/2025/SEMFAZ)
+        </div>
+        <div class="form-address">
+            Ilmo. Sr. Secretário Municipal de Fazenda,
+        </div>
+        <form id="restituicaoForm">
+            <table>
+                <tr>
+                    <td colspan="3">Nome/razão social:</td>
+                </tr>
+                <tr>
+                    <td colspan="3"><input name="nome" required="" type="text"/></td>
+                </tr>
+                <tr>
+                    <td colspan="3">Endereço (Logradouro, nº, Bairro, Complemento):</td>
+                </tr>
+                <tr>
+                    <td colspan="3"><input name="endereco" required="" type="text"/></td>
+                </tr>
+                <tr>
+                    <td>CPF/CNPJ:</td>
+                    <td>RG:</td>
+                    <td>Inscrição Municipal:</td>
+                </tr>
+                <tr>
+                    <td><input name="cpfcnpj" required="" type="text"/></td>
+                    <td><input name="rg" type="text"/></td>
+                    <td><input name="inscricaoMunicipal" required="" type="text"/></td>
+                </tr>
+                <tr>
+                    <td>Tel (fixo):</td>
+                    <td>Tel (celular):</td>
+                    <td>e-MAIL:</td>
+                </tr>
+                <tr>
+                    <td><input name="telFixo" type="text"/></td>
+                    <td><input name="telCelular" required="" type="text"/></td>
+                    <td><input name="email" required="" type="email"/></td>
+                </tr>
+            </table>
+            <div class="request-text">
+                Vem à presença de Vossa Senhoria solicitar a restituição do valor de R$. 10,37 pago indevidamente, pelo motivo de divergência no cálculo do montante do débito.
+            </div>
+            <div class="section-title">
+                DADOS DA CONTA DO REQUERENTE PARA DEPÓSITO
+            </div>
+            <table>
+                <tr>
+                    <td>Banco:</td>
+                    <td>Nº da Agência:</td>
+                    <td>Nº da Conta:</td>
+                </tr>
+                <tr>
+                    <td><input name="banco" required="" type="text"/></td>
+                    <td><input name="agencia" required="" type="text"/></td>
+                    <td><input name="conta" required="" type="text"/></td>
+                </tr>
+            </table>
+            <div class="notice-section">
+                É de minha inteira responsabilidade a conferência e certificação dos dados ora informados para fins de depósito do(s) valor(es) restituído(s) em minha conta bancária.
+            </div>
+            <div class="section-title">
+                DOCUMENTOS A SEREM ANEXADOS A ESTE REQUERIMENTO E ENVIADOS, CONFORME O CASO
+            </div>
+            <div class="docs-section">
+                <p>Documentos em PDF legível:</p>
+                <ol class="docs-list">
+                    <li>pessoa física: documento pessoal do contribuinte (RG ou CNH)</li>
+                    <li>pessoa jurídica privada: atos constitutivos e comprovante de representação legal e do sócio/administrador;</li>
+                    <li>órgão público: Portaria ou Decreto que nomeia o representante, documento oficial de identificação do representante.</li>
+                    <li>procurador: procuração válida e com poderes para representação junto à SEMFAZ e cópia do documento pessoal do procurador;</li>
+                    <li>comprovante bancário do pagamento que conste o valor indevido;</li>
+                    <li>Documento de Arrecadação Municipal (DAM) que conste o valor pago indevidamente.</li>
+                </ol>
+            </div>
+            <div class="section-title">
+                CIENTIFICAÇÃO
+            </div>
+            <div class="notice-section">
+                Declaro estar ciente que, em caso de ausência da assinatura neste documento ou do não envio de algum dos documentos necessários, conforme o caso do requerente, juntamente com este requerimento, para o e-Mail <strong>restituir@portovelho.ro.gov.br</strong>, se não complementado no prazo de 72 (setenta e duas horas), contados do recebimento do primeiro envio, resultará em sua não juntada ao processo único de restituição de ofício, implicando em seu arquivamento, sem análise de mérito, conforme Arts. 6º e 7º, da Resolução nº. 001/2025/GAB/SEMFAZ/PMPV, de 30 de abril de 2025.
+            </div>
+            <div class="date-signature">
+                <div class="date">
+                    <div id="dataAtual">Porto Velho ___/___/_____.</div>
+                </div>
+                <div class="signature">
+                    <input name="assinatura" placeholder="Assinatura do Requerente ou Responsável Legal" style="border: none; outline: none; text-align: center; background-color: transparent;" type="text"/>
+                </div>
+            </div>
+            <div class="button-container">
+                <button class="pdf-button" id="gerarPDF" type="button">Gerar PDF</button>
+            </div>
+        </form>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script>
+        // Atualiza a data atual
+        window.onload = function () {
+            const dataAtual = new Date();
+            const dia = String(dataAtual.getDate()).padStart(2, '0');
+            const mes = String(dataAtual.getMonth() + 1).padStart(2, '0'); // Mês começa em 0
+            const ano = dataAtual.getFullYear();
+            document.getElementById('dataAtual').textContent = `Porto Velho ${dia}/${mes}/${ano}.`;
+        };
+
+        // Função para gerar o PDF
+        document.getElementById("gerarPDF").addEventListener("click", async () => {
+            const form = document.getElementById("restituicaoForm");
+            const inputs = form.querySelectorAll("input[required]");
+            let todosCamposPreenchidos = true;
+            const highlightColor = "rgba(255, 0, 0, 0.1)"; // Cor de fundo levemente vermelha
+
+            // Verifica se todos os campos obrigatórios foram preenchidos
+            inputs.forEach(input => {
+                 // Checa se o campo é visível antes de validar
+                if (input.offsetParent !== null && !input.value.trim()) {
+                    todosCamposPreenchidos = false;
+                    input.style.backgroundColor = highlightColor; // Usa fundo vermelho claro
+                    input.style.border = '1px solid red'; // Mantém borda para clareza
+                } else if (input.offsetParent !== null) {
+                    input.style.backgroundColor = ''; // Limpa fundo
+                    input.style.border = 'none'; // Remove borda se preenchido
+                }
+            });
+
+
+            if (!todosCamposPreenchidos) {
+                alert("Por favor, preencha todos os campos obrigatórios destacados.");
+                return;
+            }
+
+             // Prepara para gerar o PDF: remove destaques e esconde botão
+            const allInputs = form.querySelectorAll("input");
+            const originalStyles = [];
+             allInputs.forEach((input, index) => {
+                originalStyles[index] = { border: input.style.border, backgroundColor: input.style.backgroundColor };
+                input.style.border = 'none';
+                input.style.backgroundColor = 'transparent';
+            });
+
+            const buttonContainer = document.querySelector('.button-container');
+            const originalDisplayButton = buttonContainer.style.display;
+            buttonContainer.style.display = 'none';
+
+
+            // Configuração do PDF
+            const { jsPDF } = window.jspdf;
+            // Usar 'pt' (points) como unidade. A4: 595.28 x 841.89 pt
+            const pdf = new jsPDF("p", "pt", "a4");
+            const content = document.querySelector(".container");
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfMargin = 20; // Margem em points
+            const contentWidth = pdfWidth - (pdfMargin * 2);
+
+            // Criação do PDF com ajustes
+            await pdf.html(content, {
+                callback: function (pdf) {
+                    // Restaura estilos dos inputs e exibição do botão
+                     allInputs.forEach((input, index) => {
+                        input.style.border = originalStyles[index].border;
+                        input.style.backgroundColor = originalStyles[index].backgroundColor;
+                    });
+                    buttonContainer.style.display = originalDisplayButton;
+
+                    const nomeRequerente = document.querySelector('input[name="nome"]').value.trim() || 'Requerente';
+                    const fileName = `Restituicao_${nomeRequerente.replace(/\s+/g, "_")}.pdf`;
+                    pdf.save(fileName);
+                },
+                margin: pdfMargin, // Usa a margem definida
+                autoPaging: 'text', // Tenta quebrar página por texto
+                x: pdfMargin, // Posição X inicial com margem
+                y: pdfMargin, // Posição Y inicial com margem
+                // Removido 'width' e 'windowWidth' para usar cálculo automático
+                html2canvas: {
+                    scale: 0.75, // Escala fixa para consistência
+                    useCORS: true,
+                    letterRendering: true,
+                    // Tenta garantir que a largura renderizada corresponda à disponível
+                    width: content.scrollWidth, // Usa a largura real de scroll do container
+                    windowWidth: content.scrollWidth // Define a janela de renderização com a largura do conteúdo
+                }
+            });
+        });
+    </script>
+</body>
+</html>
